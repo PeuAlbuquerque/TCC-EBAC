@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clonar repositorio') {
+            steps {
+                git 'https://github.com/PeuAlbuquerque/TCC-EBAC.git'
+            }
+        }
+        stage('Acessar pasta API e instalar dependencias') {
+            steps {
+                script {
+                    def apiPath = "${env.WORKSPACE}\\API"
+                    bat """
+                        cd ${apiPath}
+                        dir
+                        npm install
+                    """
+                }
+            }
+        }
+        stage('Executar testes') {
+            steps {
+                script {
+                    def apiPath = "${env.WORKSPACE}\\API"
+                    bat """
+                        cd ${apiPath}
+                        dir
+                        npx cypress run
+                    """
+                }
+            }
+        }
+    }
+}
